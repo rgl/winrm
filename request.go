@@ -79,15 +79,12 @@ func NewExecuteCommandRequest(uri, shellId, command string, arguments []string, 
 
 	body := message.CreateBodyElement("CommandLine", soap.DOM_NS_WIN_SHELL)
 
-	// ensure special characters like & don't mangle the request XML
-	command = "<![CDATA[" + command + "]]>"
 	commandElement := message.CreateElement(body, "Command", soap.DOM_NS_WIN_SHELL)
-	commandElement.SetContent(command)
+	commandElement.SetContent(xmlEscapeText(command))
 
 	for _, arg := range arguments {
-		arg = "<![CDATA[" + arg + "]]>"
 		argumentsElement := message.CreateElement(body, "Arguments", soap.DOM_NS_WIN_SHELL)
-		argumentsElement.SetContent(arg)
+		argumentsElement.SetContent(xmlEscapeText(arg))
 	}
 
 	return message
